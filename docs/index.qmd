@@ -1,0 +1,98 @@
+---
+title: "index.qmd"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+# Load libraries
+
+library(tidyverse)
+library(readxl)
+library(here)
+library(dplyr)
+library(readr)
+library(ggthemes)
+library(ggridges)
+library(ggplot2)
+library(gt)
+library(knitr)
+library(stringr)
+library(lubridate)
+library(broom)
+library(scales)
+library(sf)   
+library(janitor)
+```
+
+```{r}
+# read raw data
+
+ambient_air <- read_excel(here::here("data/raw/who_ambient_air_quality_database_version_2024_(v6.1).xlsx"), sheet = "Update 2024 (V6.1)")
+```
+
+```{r}
+#  Process raw data 
+
+air_quality <- ambient_air |>
+  clean_names() |> # cleaning and standardizing name
+  rename_with(~ gsub("\\s+", "_", .x)) |> # dobulechecking by replacing spaces with "_"
+  rename(region = who_region,
+         country = country_name,
+         pm10 = pm10_concentration,
+         pm25 = pm25_concentration,
+         no2 = no2_concentration,
+         station = type_of_stations) |> # reanmming variable names
+  mutate(region = recode(region, 
+                         `1_Afr` = "AF", 
+                         `2_Amr` = "AM", 
+                         `3_Sear` = "SEA", 
+                         `4_Eur` = "EU", 
+                         `5_Emr` = "EM", 
+                         `6_Wpr` = "WP", 
+                         `7_NonMS` = "NonMS")) |> 
+  mutate(across(c(pm10, pm25, no2, population),
+                as.numeric), year = as.integer(year), city = factor(city)) |>
+    filter(!is.na(pm10) & 
+         !is.na(pm25) & 
+         !is.na(no2) & !is.na(year) & !is.na(population)) |>
+  select(region:year,
+         pm10:no2, # selcting relevant columns for analysis
+         station,
+         population) |>
+      arrange(region, country, city, year)
+```
+
+```{r}
+# Save processed data
+
+write_csv(air_quality,
+           here::here("data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"))
+```
+
+```{r}
+air_quality
+```
