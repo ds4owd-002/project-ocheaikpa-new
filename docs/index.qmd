@@ -46,16 +46,20 @@ library(broom)
 library(scales)
 library(sf)   
 library(janitor)
+library(stringr)
+
+
+
 ```
 
 ```{r}
-# read raw data
+# import raw data
 
 ambient_air <- read_excel(here::here("data/raw/who_ambient_air_quality_database_version_2024_(v6.1).xlsx"), sheet = "Update 2024 (V6.1)")
 ```
 
 ```{r}
-#  Process raw data 
+#  Process raw data (data transformation)
 
 air_quality <- ambient_air |>
   clean_names() |> # cleaning and standardizing name
@@ -73,7 +77,8 @@ air_quality <- ambient_air |>
                          `4_Eur` = "EU", 
                          `5_Emr` = "EM", 
                          `6_Wpr` = "WP", 
-                         `7_NonMS` = "NonMS")) |> 
+                         `7_NonMS` = "NonMS")) |>
+  mutate(city = str_remove(city, "/[A-Z]{3}$")) |>
   mutate(across(c(pm10, pm25, no2, population),
                 as.numeric), year = as.integer(year), city = factor(city)) |>
     filter(!is.na(pm10) & 
@@ -87,12 +92,208 @@ air_quality <- ambient_air |>
 ```
 
 ```{r}
-# Save processed data
+# export processed data
 
 write_csv(air_quality,
            here::here("data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"))
 ```
 
+## Note: \*\*\*\*\*Create ReadMe & Dictionary files
+
 ```{r}
+# load dataset
 air_quality
+
+# explore dataset
+glimpse(air_quality)
+head(air_quality)
+tail(air_quality)
+str(air_quality)
+nrow(air_quality)
+ncol(air_quality)
+```
+
+```{r}
+
+# analysis of processed data
+
+
+```
+
+```{r}
+# Filter only German cities of interest
+
+germany_cities <- c("Berlin", "Hamburg", "Munchen", "Stuttgart")
+
+air_quality_deu <- air_quality |>
+  filter(country == "Germany",
+         city %in% germany_cities,
+         year >= 2010 & year <= 2021)
+```
+
+## Analysis
+
+### 1.0 Descriptive Statistics
+
+```{r}
+
+desc_stats <- air_quality_deu |>
+  group_by(city) |>
+  summarise(
+    mean_pm25 = mean(pm25),
+    sd_pm25   = sd(pm25),
+    mean_pm10 = mean(pm10),
+    sd_pm10   = sd(pm10),
+    mean_no2 = mean(no2),
+    sd_no2   = sd(no2))
+  
+print(desc_stats)
+
+```
+
+### Time Series Plots
+
+```{r}
+ggplot(air_quality_deu,
+       aes(year,
+           pm25,
+           color = city)) +
+  geom_line(size = 1.1) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "PM2.5 Trend (2010–2021)", y = "PM2.5 (µg/m³)")
+
+ggplot(air_quality_deu,
+       aes(year,
+           pm10,
+           color = city)) +
+  geom_line(size = 1.1) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "PM10 Trend (2010–2021)", y = "PM10 (µg/m³)")
+
+ggplot(air_quality_deu,
+       aes(year,
+           no2,
+           color = city)) +
+  geom_line(size = 1.1) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "NO₂ Trend (2010–2021)", y = "NO₂ (µg/m³)")
+```
+
+Trend Analysis
+
+### Rate of Change per year (using linear regression slope)
+
+```{r}
+compute_slope <- function(air_quality_deu, pollutant) {
+  model <- lm(air_quality_deu[[pollutant]] ~ air_quality_deu$year)
+  slope <- coef(model)[2]  # yearly rate of change
+  return(slope)
+}
+
+slopes <- air_quality_deu |>
+  group_by(city) |>
+  summarise(
+    slope_pm25 = compute_slope(cur_data(), "pm25"),
+    slope_pm10 = compute_slope(cur_data(), "pm10"),
+    slope_no2  = compute_slope(cur_data(), "no2")
+  )
+
+print(slopes)
+```
+
+### Precentage Change (first year vs last year)
+
+```{r}
+percent_change <- air_quality_deu |>
+  group_by(city) |>
+  summarise(
+    pct_pm25 = ((last(pm25) - first(pm25)) / first(pm25)) * 100,
+    pct_pm10 = ((last(pm10) - first(pm10)) / first(pm10)) * 100,
+    pct_no2  = ((last(no2) - first(no2))  / first(no2) * 100)
+  )
+
+print(percent_change)
+```
+
+### Correlation Matrix (base R + ggplot)
+
+```{r}
+
+```
+
+```{r}
+# Compute correlation matrix
+corr_data <- air_quality_deu |>
+  select(pm25, pm10, no2)
+
+corr_matrix <- cor(corr_data, use = "complete.obs")
+print(corr_matrix)
+
+# Convert matrix to tidy format for ggplot
+corr_air_quality_deu <- corr_matrix |>
+  as.data.frame() |>
+  rownames_to_column("var1") |>
+  pivot_longer(cols = -var1, names_to = "var2", values_to = "value")
+
+# Plot heatmap
+ggplot(corr_air_quality_deu,
+       aes(var1, var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = round(value, 2)), size = 5) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+  theme_minimal() +
+  labs(title = "Correlation Heatmap", x = "", y = "")
+```
+
+### **PCA (Principal Component Analysis)**
+
+```{r}
+pca_input <- air_quality_deu |>
+  select(pm25, pm10, no2) |>
+  scale()
+
+pca <- prcomp(pca_input)
+
+summary(pca)
+plot(pca, main = "PCA Scree Plot")
+biplot(pca, cex = 0.6, main = "PCA Biplot")
+```
+
+```{r}
+# Plot PCA without labels
+plot(pca$x[,1], pca$x[,2],
+     xlab = "PC1", ylab = "PC2",
+     main = "PCA Biplot (clean)",
+     pch = 19, col = "grey40")
+
+# Add variable arrows
+arrows(0, 0, pca$rotation[,1] * 3, pca$rotation[,2] * 3,
+       col = "red", lwd = 2)
+
+# Add variable names with spacing
+text(pca$rotation[,1] * 3.2,
+     pca$rotation[,2] * 3.2,
+     labels = rownames(pca$rotation),
+     col = "red", cex = 1)
+
+```
+
+### 7. K-Means Clustering
+
+```{r}
+set.seed(123)
+k3 <- kmeans(pca_input, centers = 3)
+
+air_quality_deu$cluster <- k3$cluster
+
+ggplot(air_quality_deu,
+       aes(pm25,
+           pm10,
+           color = as.factor(cluster))) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "K-means Clustering (3 clusters)", color = "Cluster")
 ```
