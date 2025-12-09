@@ -47,9 +47,9 @@ library(scales)
 library(sf)   
 library(janitor)
 library(stringr)
-
-
-
+library(gt)
+library(gtsummary)
+library(DT)
 ```
 
 ```{r}
@@ -92,13 +92,49 @@ air_quality <- ambient_air |>
 ```
 
 ```{r}
+#| eval: true
+#| echo: false
+# applying conditinal statement: case_when() together with mutate() as an alternative
+
+air_quality_alt <- ambient_air |>
+  clean_names() |> # cleaning and standardizing name
+  rename_with(~ gsub("\\s+", "_", .x)) |> # dobulechecking by replacing spaces with "_"
+  rename(region = who_region,
+         country = country_name,
+         pm10 = pm10_concentration,
+         pm25 = pm25_concentration,
+         no2 = no2_concentration,
+         station = type_of_stations) |> # reanmming variable names
+    mutate(region = case_when(
+     region == "1_Afr" ~ "AF", 
+     region == "2_Amr" ~ "AM",
+     region == "3_Sear" ~ "SEA",
+     region == "4_Eur" ~ "EU",
+     region == "5_Emr" ~ "EM",
+     region == "6_Wpr" ~ "WP",
+     region == "7_NonMS" ~ "NonMS"
+  )) |>
+  mutate(city = str_remove(city, "/[A-Z]{3}$")) |>
+  mutate(across(c(pm10, pm25, no2, population),
+                as.numeric), year = as.integer(year), city = factor(city)) |>
+    filter(!is.na(pm10) & 
+         !is.na(pm25) & 
+         !is.na(no2) & !is.na(year) & !is.na(population)) |>
+  select(region:year,
+         pm10:no2, # selcting relevant columns for analysis
+         station,
+         population) |>
+      arrange(region, country, city, year)
+```
+
+```{r}
 # export processed data
 
 write_csv(air_quality,
            here::here("data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"))
 ```
 
-## Note: \*\*\*\*\*Create ReadMe & Dictionary files
+## Note: \*\*\*\*\*"Create ReadMe & Dictionary files"
 
 ```{r}
 # load dataset
@@ -121,6 +157,14 @@ ncol(air_quality)
 ```
 
 ```{r}
+
+```
+
+## Analysis
+
+Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels from 2010 t0 2021
+
+```{r}
 # Filter only German cities of interest
 
 germany_cities <- c("Berlin", "Hamburg", "Munchen", "Stuttgart")
@@ -131,8 +175,6 @@ air_quality_deu <- air_quality |>
          year >= 2010 & year <= 2021)
 ```
 
-## Analysis
-
 ### 1.0 Descriptive Statistics
 
 ```{r}
@@ -142,13 +184,56 @@ desc_stats <- air_quality_deu |>
   summarise(
     mean_pm25 = mean(pm25),
     sd_pm25   = sd(pm25),
+    median_pm25 = median(pm25),
     mean_pm10 = mean(pm10),
     sd_pm10   = sd(pm10),
+    median_pm10 = median(pm10),
     mean_no2 = mean(no2),
-    sd_no2   = sd(no2))
+    sd_no2   = sd(no2),
+    median_no2 = median(no2))
   
 print(desc_stats)
 
+```
+
+```{r}
+desc_stats |>
+    gt() |> # Using gt() function for table presentation 
+    tab_header(title = "Descriptive Statistical Analysis of Top German Cities' Ambient Air Quality (µg/m³)",
+               subtitle = "Data from 2010 to 2021") |>
+    fmt_number(columns = mean_pm25:sd_no2, decimals = 2) |>
+    cols_label(city = "City",
+               mean_pm25 = "Mean(PM₂.₅)",
+               sd_pm25 = "SD(PM₂.₅)",
+               median_pm25 = "Median(PM₂.₅)",
+               mean_pm10 = "Mean(PM₁₀)",
+               sd_pm10 = "SD(PM₁₀)",
+               median_pm10 = "Median(PM₁₀)",
+               mean_no2 = "Mean(NO₂)",
+               sd_no2 = "SD(NO₂)",
+               median_no2 = "Median(NO₂)")
+```
+
+@tbl-deu-stats below summarises the annual mean concentrations and their variability for PM₂.₅, PM₁₀, and NO₂ across four major German cities from 2010 to 2021 and through 3 decriptive measures: Mean, Standard deviations and Median.
+
+Between 2010 and 2021, Hamburg shows the cleanest air across all pollutants, while Stuttgart exhibits the highest concentrations, especially for NO₂, reflecting severe traffic-related pollution and its valley-basin geography. Berlin has the highest PM₂.₅, whereas Munich shows moderate PM but high NO₂, again linked to traffic intensity. Standard deviations confirm that Stuttgart and Munich experience the largest year-to-year fluctuations, while Berlin and Hamburg remain relatively stable. Overall, @tbl-deu-stats highlights clear spatial contrasts in air quality, shaped by urban structure, meteorology, and traffic patterns.
+
+```{r}
+#| label: tbl-deu-stats
+#| tbl-cap: "Descriptive Statistical Analysis of Top German Cities' Ambient Air Quality (µg/m³). Data from 2010 - 2021"
+
+desc_stats |>
+    rename(`City` = city,
+           `Mean(PM₂.₅)` = mean_pm25,
+           `SD(PM₂.₅)` = sd_pm25,
+            `Median(PM₂.₅)` = median_pm25,
+           `Mean(PM₁₀)` = mean_pm10,
+           `SD(PM₁₀)` = sd_pm10,
+           `Median(PM₁₀)` = median_pm10,
+           `Mean(NO₂)` = mean_no2,
+           `SD(NO₂)` = sd_no2,
+           `Median(NO₂)` = median_no2) |>
+    kable(digits = 2) # Using kable() function table presenation and cross-referencing
 ```
 
 ### Time Series Plots
@@ -218,11 +303,7 @@ percent_change <- air_quality_deu |>
 print(percent_change)
 ```
 
-### Correlation Matrix (base R + ggplot)
-
-```{r}
-
-```
+### Correlation Matrix
 
 ```{r}
 # Compute correlation matrix
@@ -281,7 +362,7 @@ text(pca$rotation[,1] * 3.2,
 
 ```
 
-### 7. K-Means Clustering
+### K-Means Clustering
 
 ```{r}
 set.seed(123)
