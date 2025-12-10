@@ -2,7 +2,11 @@
 title: "Capstone Project Report"
 subtitle: "Ambient Air Quality Anaysis"
 author: "Ochea Ikpa"
-format: html
+date: today
+format:
+  html:
+    toc: true
+    code-fold: true
 execute: 
   echo: true
   warning: false
@@ -119,6 +123,14 @@ write_csv(air_quality,
 
 ## Note: \*\*\*\*\*"Create ReadMe & Dictionary files"
 
+*church*
+
+**Worship**
+
+> `Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels from 2010 t0 2021`
+
+ug/dm^3^ NO~2~
+
 ```{r}
 # load dataset
 air_quality
@@ -145,7 +157,7 @@ ncol(air_quality)
 
 ## Analysis
 
-Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels from 2010 t0 2021
+`Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels from 2010 t0 2021`
 
 ```{r}
 # Filter only German cities of interest
@@ -197,9 +209,9 @@ desc_stats |>
                median_no2 = "Median(NO₂)")
 ```
 
-@tbl-deu-stats below summarises the annual mean concentrations and their variability for PM₂.₅, PM₁₀, and NO₂ across four major German cities from 2010 to 2021 and via 3 descriptive measures: Mean, Standard deviations and Median.
+@tbl-deu-stats `below summarises the annual mean concentrations and their variability for PM₂.₅, PM₁₀, and NO₂ across four major German cities from 2010 to 2021 and via 3 descriptive measures: Mean, Standard deviations and Median`.
 
-Between 2010 and 2021, Hamburg shows the cleanest air across all pollutants, while Stuttgart exhibits the highest concentrations, especially for NO₂, reflecting severe traffic-related pollution and its valley-basin geography. Berlin has the highest PM₂.₅, whereas Munich shows moderate PM but high NO₂, again linked to traffic intensity. Standard deviations confirm that Stuttgart and Munich experience the largest year-to-year fluctuations, while Berlin and Hamburg remain relatively stable. Overall, @tbl-deu-stats highlights clear spatial contrasts in air quality, shaped by urban structure, meteorology, and traffic patterns.
+`Between 2010 and 2021, Hamburg shows the cleanest air across all pollutants, while Stuttgart exhibits the highest concentrations, especially for NO₂, reflecting severe traffic-related pollution and its valley-basin geography. Berlin has the highest PM₂.₅, whereas Munich shows moderate PM but high NO₂, again linked to traffic intensity. Standard deviations confirm that Stuttgart and Munich experience the largest year-to-year fluctuations, while Berlin and Hamburg remain relatively stable`. `Overall`, @tbl-deu-stats `highlights clear spatial contrasts in air quality, shaped by urban structure, meteorology, and traffic patterns`.
 
 ```{r}
 #| label: tbl-deu-stats
