@@ -27,7 +27,7 @@ editor_options:
 
 ```{r}
 
-# Loading libraries
+# Loading libraries/packages
 library(tidyverse)
 library(readxl)
 library(here)
@@ -173,7 +173,7 @@ ggplot(air_quality_deu,
   labs(title = "PM₂.₅ Trend (2010–2021)", y = "PM₂.₅ (µg/m³)")
 ```
 
-in @fig-pm25-trends `all cities improve strongly, with Munich and Stuttgart showing the biggest percentage drops. Stuttgart and Munich begin as the most polluted but converge with others by 2021`.
+In @fig-pm25-trends `all cities improve strongly, with Munich and Stuttgart showing the biggest percentage drops. Stuttgart and Munich begin as the most polluted but converge with others by 2021`.
 
 ```{r}
 #| label: fig-pm10-trends
@@ -189,7 +189,7 @@ ggplot(air_quality_deu,
   labs(title = "PM₁₀ Trend (2010–2021)", y = "PM₁₀ (µg/m³)")
 ```
 
-in @fig-pm10-trends `Munich and Stuttgart show the biggest improvements. Stuttgart remains high in 2010–2015 due to topography and heavy traffic, then improves significantly`.
+In @fig-pm10-trends `Munich and Stuttgart show the biggest improvements. Stuttgart remains high in 2010–2015 due to topography and heavy traffic, then improves significantly`.
 
 ```{r}
 #| label: fig-no2-trends
@@ -205,7 +205,7 @@ ggplot(air_quality_deu,
   labs(title = "NO₂ Trend (2010–2021)", y = "NO₂ (µg/m³)")
 ```
 
-in @fig-no2-trends `Stuttgart and Munich start with very high NO₂ levels but both cut their concentrations drastically. Berlin and Hamburg also improve but began from lower starting points`.
+In @fig-no2-trends `Stuttgart and Munich start with very high NO₂ levels but both cut their concentrations drastically. Berlin and Hamburg also improve but began from lower starting points`.
 
 ```{r}
 surf <- air_quality_deu |>
@@ -261,3 +261,7 @@ ggplot(corr_air_quality_deu,
 `Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munich, and Stuttgart, indicating improving air quality over the 2010–2021 period. Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least, while strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion. Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies`
 
 # References
+
+```{r}
+rm(slopes, compute_slope, percent_change, pca, pca_input, k3, air_quality_alt)
+```
