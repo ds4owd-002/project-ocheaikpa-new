@@ -136,21 +136,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     
   </div>
   
-<div>
-  <div class="abstract">
-    <div class="block-title">Abstract</div>
-    The abstract will be placed here. Breaks can be added by hitting return on the keyboard.
-  </div>
-</div>
 
 
 </header>
 
 
-<p>The goal of this project is to analyse samples from a feacal sludge characterization study. Samples were collected in … between …</p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities. (()) Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design (()). According to <strong>Nasr (2023),</strong> Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the <strong>WHO Ambient Air Quality Database</strong></p>
+<p><code>Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities. (()) Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design (()). In , Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the **WHO Ambient Air Quality Database**</code></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -176,46 +169,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># importing raw data</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># importing raw data</span></span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>ambient_air <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/raw/who_ambient_air_quality_database_version_2024_(v6.1).xlsx"</span>), <span class="at">sheet =</span> <span class="st">"Update 2024 (V6.1)"</span>)</span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#  Processing raw data</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>air_quality <span class="ot">&lt;-</span> ambient_air <span class="sc">|&gt;</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> <span class="co"># cleaning and standardizing name</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">"_"</span>, .x)) <span class="sc">|&gt;</span> <span class="co"># dobulechecking by replacing spaces with "_"</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">region =</span> who_region,</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">country =</span> country_name,</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">pm10 =</span> pm10_concentration,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">pm25 =</span> pm25_concentration,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">no2 =</span> no2_concentration,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">station =</span> type_of_stations) <span class="sc">|&gt;</span> <span class="co"># reanmming variable names</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">recode</span>(region, </span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">1_Afr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"AF"</span>, </span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">2_Amr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"AM"</span>, </span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">3_Sear</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"SEA"</span>, </span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">4_Eur</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"EU"</span>, </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">5_Emr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"EM"</span>, </span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">6_Wpr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"WP"</span>, </span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">7_NonMS</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"NonMS"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">city =</span> <span class="fu">str_remove</span>(city, <span class="st">"/[A-Z]{3}$"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(pm10, pm25, no2, population),</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>                as.numeric), <span class="at">year =</span> <span class="fu">as.integer</span>(year), <span class="at">city =</span> <span class="fu">factor</span>(city)) <span class="sc">|&gt;</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(pm10) <span class="sc">&amp;</span> </span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(pm25) <span class="sc">&amp;</span> </span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(no2) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(year) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">|&gt;</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region<span class="sc">:</span>year,</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>         pm10<span class="sc">:</span>no2, <span class="co"># selcting relevant columns for analysis</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>         station,</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>         population) <span class="sc">|&gt;</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(region, country, city, year)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>air_quality <span class="ot">&lt;-</span> ambient_air <span class="sc">|&gt;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> <span class="co"># cleaning and standardizing name</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">"_"</span>, .x)) <span class="sc">|&gt;</span> <span class="co"># dobulechecking by replacing spaces with "_"</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">region =</span> who_region,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">country =</span> country_name,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">pm10 =</span> pm10_concentration,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">pm25 =</span> pm25_concentration,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">no2 =</span> no2_concentration,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">station =</span> type_of_stations) <span class="sc">|&gt;</span> <span class="co"># renaming variable names</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">recode</span>(region, </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">1_Afr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"AF"</span>, </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">2_Amr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"AM"</span>, </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">3_Sear</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"SEA"</span>, </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">4_Eur</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"EU"</span>, </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">5_Emr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"EM"</span>, </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">6_Wpr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"WP"</span>, </span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                         <span class="st">`</span><span class="at">7_NonMS</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"NonMS"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">city =</span> <span class="fu">str_remove</span>(city, <span class="st">"/[A-Z]{3}$"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(pm10, pm25, no2, population),</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>                as.numeric), <span class="at">year =</span> <span class="fu">as.integer</span>(year), <span class="at">city =</span> <span class="fu">factor</span>(city)) <span class="sc">|&gt;</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(pm10) <span class="sc">&amp;</span> </span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(pm25) <span class="sc">&amp;</span> </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(no2) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(year) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">|&gt;</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region<span class="sc">:</span>year,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>         pm10<span class="sc">:</span>no2, <span class="co"># selcting relevant columns for analysis</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>         station,</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>         population) <span class="sc">|&gt;</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(region, country, city, year)</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co"># exporting processed data</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(air_quality,</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>           here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(air_quality,</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>           here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -226,13 +218,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter only German cities of interest</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>germany_cities <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Berlin"</span>, <span class="st">"Hamburg"</span>, <span class="st">"Munchen"</span>, <span class="st">"Stuttgart"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>air_quality_deu <span class="ot">&lt;-</span> air_quality <span class="sc">|&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"Germany"</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         city <span class="sc">%in%</span> germany_cities,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         year <span class="sc">&gt;=</span> <span class="dv">2010</span> <span class="sc">&amp;</span> year <span class="sc">&lt;=</span> <span class="dv">2021</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>germany_cities <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Berlin"</span>, <span class="st">"Hamburg"</span>, <span class="st">"Munchen"</span>, <span class="st">"Stuttgart"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>air_quality_deu <span class="ot">&lt;-</span> air_quality <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"Germany"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         city <span class="sc">%in%</span> germany_cities,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         year <span class="sc">&gt;=</span> <span class="dv">2010</span> <span class="sc">&amp;</span> year <span class="sc">&lt;=</span> <span class="dv">2021</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -550,13 +541,11 @@ Figure&nbsp;4: Correlation heatmap showing relationships among annual mean conce
   title = {Capstone {Project} {Report}},
   date = {2025-12-11},
   url = {https://www.example.com},
-  langid = {en},
-  abstract = {The abstract will be placed here. Breaks can be added by
-    hitting return on the keyboard.}
+  langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-ikpa2025" class="csl-entry quarto-appendix-citeas" role="listitem">
-Ikpa, Ochea. 2025. <span>“Capstone Project Report.”</span> My Blog.
-December 11, 2025. <a href="https://www.example.com">https://www.example.com</a>.
+Ikpa, O. (2025, December 11). <em>Capstone Project Report</em>. My Blog.
+<a href="https://www.example.com">https://www.example.com</a>
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">

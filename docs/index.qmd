@@ -16,22 +16,20 @@ format:
 execute: 
   echo: true
   warning: false
-abstract: 
-  The abstract will be placed here. Breaks can be added by hitting return on the keyboard.
 license: "CC BY"
 citation: 
   container-title: My Blog
   url: https://www.example.com
+bibliography: references.bib
+csl: apa.csl
 editor: visual
 editor_options: 
   chunk_output_type: console
 ---
 
-The goal of this project is to analyse samples from a feacal sludge characterization study. Samples were collected in ... between ...
-
 # Introduction
 
-Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities. (()) Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design (()). According to **Nasr (2023),** Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the **WHO Ambient Air Quality Database**
+`Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities. (()) Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design (()). In , Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the **WHO Ambient Air Quality Database**`
 
 ```{r}
 
@@ -57,13 +55,12 @@ library(gt)
 library(gtsummary)
 library(DT)
 
-# importing raw data
 
+# importing raw data
 ambient_air <- read_excel(here::here("data/raw/who_ambient_air_quality_database_version_2024_(v6.1).xlsx"), sheet = "Update 2024 (V6.1)")
 
 
 #  Processing raw data
-
 air_quality <- ambient_air |>
   clean_names() |> # cleaning and standardizing name
   rename_with(~ gsub("\\s+", "_", .x)) |> # dobulechecking by replacing spaces with "_"
@@ -72,7 +69,7 @@ air_quality <- ambient_air |>
          pm10 = pm10_concentration,
          pm25 = pm25_concentration,
          no2 = no2_concentration,
-         station = type_of_stations) |> # reanmming variable names
+         station = type_of_stations) |> # renaming variable names
   mutate(region = recode(region, 
                          `1_Afr` = "AF", 
                          `2_Amr` = "AM", 
@@ -93,8 +90,8 @@ air_quality <- ambient_air |>
          population) |>
       arrange(region, country, city, year)
 
-# exporting processed data
 
+# exporting processed data
 write_csv(air_quality,
            here::here("data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"))
 
@@ -106,7 +103,6 @@ write_csv(air_quality,
 
 ```{r}
 # Filter only German cities of interest
-
 germany_cities <- c("Berlin", "Hamburg", "Munchen", "Stuttgart")
 
 air_quality_deu <- air_quality |>
