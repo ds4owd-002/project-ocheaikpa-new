@@ -93,7 +93,7 @@ write_csv(air_quality,
 
 # Methods
 
-`Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels`
+`Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels.`
 
 ```{r}
 # Filter only German cities of interest
@@ -131,9 +131,6 @@ desc_stats <- air_quality_deu |>
     mean_no2 = mean(no2),
     sd_no2   = sd(no2),
     median_no2 = median(no2))
-  
-print(desc_stats)
-
 ```
 
 ```{r}
@@ -224,7 +221,6 @@ corr_data <- air_quality_deu |>
   select(pm25, pm10, no2)
 
 corr_matrix <- cor(corr_data, use = "complete.obs")
-print(corr_matrix)
 
 # Converting matrix to tidy format for ggplot
 corr_air_quality_deu <- corr_matrix |>
