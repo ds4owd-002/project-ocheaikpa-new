@@ -23,7 +23,7 @@ editor_options:
 
 # Introduction
 
-Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities [@eeaIowAirPollution2025; @whoAirQuality2023]. Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design. In @nasrGermanyCompliedAir2023, Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the WHO Ambient Air Quality Database [@whoWHOAmbientAir2024].
+`Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities` [@eeaIowAirPollution2025; @whoAirQuality2023]. `Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design. In` @nasrGermanyCompliedAir2023, `Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the WHO Ambient Air Quality Database` [@whoWHOAmbientAir2024].
 
 ```{r}
 
@@ -93,16 +93,24 @@ write_csv(air_quality,
 
 # Methods
 
-`Berlin, Hamburg, Stuttgart, and Munchen have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels`
+`Berlin, Hamburg, Stuttgart, and Munich have been selected because they represent Germany’s largest and most diverse metropolitan regions, with distinct emission profiles, geographical settings, and climatic conditions that influence ambient air quality. They also maintain long-term, high-quality air monitoring networks, making them ideal for robust descriptive statistical analysis, trend analysis and inter-city comparison of PM₂.₅, PM₁₀, and NO₂ levels`
 
 ```{r}
 # Filter only German cities of interest
-germany_cities <- c("Berlin", "Hamburg", "Munchen", "Stuttgart")
+germany_cities <- c("Berlin", "Hamburg", "Munich", "Stuttgart")
 
 air_quality_deu <- air_quality |>
+  mutate(
+    city = case_when(
+      city == "Munchen" ~ "Munich",
+      TRUE ~ city
+      )
+  ) |>
   filter(country == "Germany",
          city %in% germany_cities,
          year >= 2010 & year <= 2021)
+
+
 ```
 
 # Results and Discussions
@@ -148,13 +156,13 @@ desc_stats |>
 
 @tbl-deu-stats `above summarises the annual mean concentrations and their variability for PM₂.₅, PM₁₀, and NO₂ across four major German cities from 2010 to 2021 and via 3 descriptive measures: Mean, Standard deviations and Median`.
 
-`Between 2010 and 2021, Hamburg shows the cleanest air across all pollutants, while Stuttgart exhibits the highest concentrations, especially for NO₂, reflecting severe traffic-related pollution and its valley-basin geography. Berlin has the highest PM₂.₅, whereas Munchen shows moderate PM but high NO₂, again linked to traffic intensity. Standard deviations confirm that Stuttgart and Munchen experience the largest year-to-year fluctuations, while Berlin and Hamburg remain relatively stable`. `Overall`, @tbl-deu-stats `highlights clear spatial contrasts in air quality, shaped by urban structure, meteorology, and traffic patterns`.
+`Between 2010 and 2021, Hamburg shows the cleanest air across all pollutants, while Stuttgart exhibits the highest concentrations, especially for NO₂, reflecting severe traffic-related pollution and its valley-basin geography. Berlin has the highest PM₂.₅, whereas Munich shows moderate PM but high NO₂, again linked to traffic intensity. Standard deviations confirm that Stuttgart and Munich experience the largest year-to-year fluctuations, while Berlin and Hamburg remain relatively stable`. `Overall`, @tbl-deu-stats `highlights clear spatial contrasts in air quality, shaped by urban structure, meteorology, and traffic patterns`.
 
 ## 2.0 Time Series Plots
 
 ```{r}
 #| label: fig-pm25-trends
-#| fig-cap: Annual PM₂.₅ trends (2010–2022) for Berlin, Hamburg, Munchen and Stuttgart
+#| fig-cap: Annual PM₂.₅ trends (2010–2022) for Berlin, Hamburg, Munich and Stuttgart
 ggplot(air_quality_deu,
        aes(year,
            pm25,
@@ -165,11 +173,11 @@ ggplot(air_quality_deu,
   labs(title = "PM₂.₅ Trend (2010–2021)", y = "PM₂.₅ (µg/m³)")
 ```
 
-in @fig-pm25-trends `all cities improve strongly, with Munchen and Stuttgart showing the biggest percentage drops. Stuttgart and Munchen begin as the most polluted but converge with others by 2021`.
+in @fig-pm25-trends `all cities improve strongly, with Munich and Stuttgart showing the biggest percentage drops. Stuttgart and Munich begin as the most polluted but converge with others by 2021`.
 
 ```{r}
 #| label: fig-pm10-trends
-#| fig-cap: Annual PM₁₀ trends (2010–2022) for Berlin, Hamburg, Munchen and Stuttgart
+#| fig-cap: Annual PM₁₀ trends (2010–2022) for Berlin, Hamburg, Munich and Stuttgart
 
 ggplot(air_quality_deu,
        aes(year,
@@ -181,11 +189,11 @@ ggplot(air_quality_deu,
   labs(title = "PM₁₀ Trend (2010–2021)", y = "PM₁₀ (µg/m³)")
 ```
 
-in @fig-pm10-trends `Munchen and Stuttgart show the biggest improvements. Stuttgart remains high in 2010–2015 due to topography and heavy traffic, then improves significantly`.
+in @fig-pm10-trends `Munich and Stuttgart show the biggest improvements. Stuttgart remains high in 2010–2015 due to topography and heavy traffic, then improves significantly`.
 
 ```{r}
 #| label: fig-no2-trends
-#| fig-cap: Annual NO₂ trends (2010–2022) for Berlin, Hamburg, Munchen and Stuttgart
+#| fig-cap: Annual NO₂ trends (2010–2022) for Berlin, Hamburg, Munich and Stuttgart
 
 ggplot(air_quality_deu,
        aes(year,
@@ -197,7 +205,7 @@ ggplot(air_quality_deu,
   labs(title = "NO₂ Trend (2010–2021)", y = "NO₂ (µg/m³)")
 ```
 
-in @fig-no2-trends `Stuttgart and Munchen start with very high NO₂ levels but both cut their concentrations drastically. Berlin and Hamburg also improve but began from lower starting points`.
+in @fig-no2-trends `Stuttgart and Munich start with very high NO₂ levels but both cut their concentrations drastically. Berlin and Hamburg also improve but began from lower starting points`.
 
 ```{r}
 surf <- air_quality_deu |>
@@ -248,10 +256,8 @@ ggplot(corr_air_quality_deu,
 
 `PM₁₀ and NO₂ exhibit a moderate positive correlation, reflecting the partial overlap between coarse particle sources (like dust) and traffic-related NO₂ emissions`.
 
-### 
-
 # Conclusions
 
-`Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munchen, and Stuttgart, indicating improving air quality over the 2010–2021 period. Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least, while strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion. Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies`
+`Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munich, and Stuttgart, indicating improving air quality over the 2010–2021 period. Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least, while strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion. Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies`
 
 # References
