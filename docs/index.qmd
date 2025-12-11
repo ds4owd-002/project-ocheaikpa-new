@@ -35,9 +35,7 @@ Urban air pollution remains a major environmental and public-health challenge in
 
 ```{r}
 
-# Data Cleaning
-
-# Load libraries
+# Loading libraries
 library(tidyverse)
 library(readxl)
 library(here)
@@ -58,16 +56,13 @@ library(stringr)
 library(gt)
 library(gtsummary)
 library(DT)
-```
 
-```{r}
-# import raw data
+# importing raw data
 
 ambient_air <- read_excel(here::here("data/raw/who_ambient_air_quality_database_version_2024_(v6.1).xlsx"), sheet = "Update 2024 (V6.1)")
-```
 
-```{r}
-#  Process raw data (data transformation)
+
+#  Processing raw data
 
 air_quality <- ambient_air |>
   clean_names() |> # cleaning and standardizing name
@@ -97,74 +92,11 @@ air_quality <- ambient_air |>
          station,
          population) |>
       arrange(region, country, city, year)
-```
 
-```{r}
-#| eval: true
-#| echo: false
-# applying conditinal statement: case_when() together with mutate() as an alternative
-
-air_quality_alt <- ambient_air |>
-  clean_names() |> # cleaning and standardizing name
-  rename_with(~ gsub("\\s+", "_", .x)) |> # dobulechecking by replacing spaces with "_"
-  rename(region = who_region,
-         country = country_name,
-         pm10 = pm10_concentration,
-         pm25 = pm25_concentration,
-         no2 = no2_concentration,
-         station = type_of_stations) |> # reanmming variable names
-    mutate(region = case_when(
-     region == "1_Afr" ~ "AF", 
-     region == "2_Amr" ~ "AM",
-     region == "3_Sear" ~ "SEA",
-     region == "4_Eur" ~ "EU",
-     region == "5_Emr" ~ "EM",
-     region == "6_Wpr" ~ "WP",
-     region == "7_NonMS" ~ "NonMS"
-  )) |>
-  mutate(city = str_remove(city, "/[A-Z]{3}$")) |>
-  mutate(across(c(pm10, pm25, no2, population),
-                as.numeric), year = as.integer(year), city = factor(city)) |>
-    filter(!is.na(pm10) & 
-         !is.na(pm25) & 
-         !is.na(no2) & !is.na(year) & !is.na(population)) |>
-  select(region:year,
-         pm10:no2, # selcting relevant columns for analysis
-         station,
-         population) |>
-      arrange(region, country, city, year)
-```
-
-```{r}
-# export processed data
+# exporting processed data
 
 write_csv(air_quality,
            here::here("data/processed/who_ambient_air_quality_database_version_2024_(v6.1)_processed.csv"))
-```
-
-## Note: \*\*\*\*\*"Create ReadMe & Dictionary files"
-
-```{r}
-# load dataset
-air_quality
-
-# explore dataset
-glimpse(air_quality)
-head(air_quality)
-tail(air_quality)
-str(air_quality)
-nrow(air_quality)
-ncol(air_quality)
-```
-
-```{r}
-
-# analysis of processed data
-
-
-```
-
-```{r}
 
 ```
 
