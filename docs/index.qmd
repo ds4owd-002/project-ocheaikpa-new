@@ -5,9 +5,6 @@ author:
   - name: Ochea Ikpa
     orcid: 0009-0001-9413-1196 
     email: ocheaikpa@gmail.com
-    affiliation: 
-      - name:
-        url:
 date: today
 format:
   html:
@@ -17,9 +14,6 @@ execute:
   echo: true
   warning: false
 license: "CC BY"
-citation: 
-  container-title: My Blog
-  url: https://www.example.com
 bibliography: references.bib
 csl: apa.csl
 editor: visual
@@ -29,7 +23,7 @@ editor_options:
 
 # Introduction
 
-`Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities. (()) Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design (()). In , Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the **WHO Ambient Air Quality Database**`
+Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities [@eeaIowAirPollution2025; @whoAirQuality2023]. Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design. In @nasrGermanyCompliedAir2023, Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the WHO Ambient Air Quality Database [@whoWHOAmbientAir2024].
 
 ```{r}
 
@@ -240,7 +234,7 @@ ggplot(corr_air_quality_deu,
   labs(title = "Correlation Heatmap", x = "", y = "")
 ```
 
-@fig-corr-matrix shows pollutants correlation:
+@fig-corr-matrix shows the following pollutants correlation:
 
 -   **PM₂.₅ vs PM₁₀**
 
@@ -261,9 +255,3 @@ ggplot(corr_air_quality_deu,
 `Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munchen, and Stuttgart, indicating improving air quality over the 2010–2021 period. Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least, while strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion. Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies`
 
 # References
-
--   **Reference List:** World Health Organization. (2024). [*WHO Ambient Air Quality Database*](https://www.google.com/search?q=WHO+Ambient+Air+Quality+Database&rlz=1C5CHFA_enNG761NG761&oq=how+do+i+reference%3A+WHO+Ambient+Air+Quality+Database+%28Update+Jan+2024%29&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRiPAtIBCDk4OTJqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8&mstk=AUtExfAhn8G0hpmxC91a82dKIUx0BMoLyJV9iQHmKwaOLBwr2fwIP8VGt7f15m-tCjc8ShdCZGkTbvy4aQ0PIz7lLkTnZt_-Kl5-Hvi7cTdtTYMDW3SOXbPFVDvUrsTHcW2QhGNUjt0gVIfZdSjjPdr5VqRNLDXdcj-Dpuhc2FV-Desepbc&csui=3&ved=2ahUKEwikoebY37ORAxWVUqQEHQfpH7YQgK4QegQIBBAB) *(update 2024)* (Version 6.1). World Health Organization (Data retrieved \[Date you accessed\], from \[URL\]).
-
--   **In-Text:** (World Health Organization, 2024) or (WHO, 2024). 
-
-<https://www.who.int/publications/m/item/who-ambient-air-quality-database-(update-jan-2024)>

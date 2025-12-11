@@ -57,7 +57,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="index_files/libs/clipboard/clipboard.min.js"></script>
@@ -73,6 +93,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap-6a8e6d95bfcd174082ff54166b04dcf7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -109,23 +158,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Author</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author">Ochea Ikpa <a href="mailto:ocheaikpa@gmail.com" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0009-0001-9413-1196" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ochea Ikpa <a href="mailto:ocheaikpa@gmail.com" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0009-0001-9413-1196" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+  </div>
+    
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
@@ -143,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p><code>Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities. (()) Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design (()). In , Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the **WHO Ambient Air Quality Database**</code></p>
+<p>Urban air pollution remains a major environmental and public-health challenge in Europe, with particulate matter (PM₂.₅, PM₁₀) and nitrogen dioxide (NO₂) posing significant risks in densely populated cities <span class="citation" data-cites="eeaIowAirPollution2025 whoAirQuality2023">(<a href="#ref-eeaIowAirPollution2025" role="doc-biblioref">EEA, 2025</a>; <a href="#ref-whoAirQuality2023" role="doc-biblioref">WHO, 2023</a>)</span>. Germany has implemented strong emission-control policies over the past decade, yet pollution patterns continue to vary across cities due to differences in traffic volume, industrial activity, and urban design. In <span class="citation" data-cites="nasrGermanyCompliedAir2023">Nasr (<a href="#ref-nasrGermanyCompliedAir2023" role="doc-biblioref">2023</a>)</span>, Nasr reported that Germany’s compliance with air quality limit values in nearly every city in 2022 did not guarantee that health was protected. This study analyzes long-term trends and interrelationships of key pollutants in four major German cities which includes Berlin, Hamburg, Munich, and Stuttgart to assess air-quality improvements and identify dominant emission influences from 2010 to 2022. Data were obtained from the WHO Ambient Air Quality Database <span class="citation" data-cites="whoWHOAmbientAir2024">(<a href="#ref-whoWHOAmbientAir2024" role="doc-biblioref">WHO, 2024</a>)</span>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -505,7 +547,7 @@ Figure&nbsp;4: Correlation heatmap showing relationships among annual mean conce
 </div>
 </div>
 </div>
-<p><a href="#fig-corr-matrix" class="quarto-xref">Figure&nbsp;4</a> shows pollutants correlation:</p>
+<p><a href="#fig-corr-matrix" class="quarto-xref">Figure&nbsp;4</a> shows the following pollutants correlation:</p>
 <ul>
 <li><strong>PM₂.₅ vs PM₁₀</strong></li>
 </ul>
@@ -527,26 +569,25 @@ Figure&nbsp;4: Correlation heatmap showing relationships among annual mean conce
 <h1>Conclusions</h1>
 <p><code>Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munchen, and Stuttgart, indicating improving air quality over the 2010–2021 period. Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least, while strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion. Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies</code></p>
 </section>
-<section id="references" class="level1">
-<h1>References</h1>
-<ul>
-<li><p><strong>Reference List:</strong> World Health Organization. (2024). <a href="https://www.google.com/search?q=WHO+Ambient+Air+Quality+Database&amp;rlz=1C5CHFA_enNG761NG761&amp;oq=how+do+i+reference%3A+WHO+Ambient+Air+Quality+Database+%28Update+Jan+2024%29&amp;gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRiPAtIBCDk4OTJqMGo3qAIAsAIA&amp;sourceid=chrome&amp;ie=UTF-8&amp;mstk=AUtExfAhn8G0hpmxC91a82dKIUx0BMoLyJV9iQHmKwaOLBwr2fwIP8VGt7f15m-tCjc8ShdCZGkTbvy4aQ0PIz7lLkTnZt_-Kl5-Hvi7cTdtTYMDW3SOXbPFVDvUrsTHcW2QhGNUjt0gVIfZdSjjPdr5VqRNLDXdcj-Dpuhc2FV-Desepbc&amp;csui=3&amp;ved=2ahUKEwikoebY37ORAxWVUqQEHQfpH7YQgK4QegQIBBAB"><em>WHO Ambient Air Quality Database</em></a> <em>(update 2024)</em> (Version 6.1). World Health Organization (Data retrieved [Date you accessed], from [URL]).</p></li>
-<li><p><strong>In-Text:</strong> (World Health Organization, 2024) or (WHO, 2024).&nbsp;</p></li>
-</ul>
-<p><a href="https://www.who.int/publications/m/item/who-ambient-air-quality-database-(update-jan-2024)" class="uri">https://www.who.int/publications/m/item/who-ambient-air-quality-database-(update-jan-2024)</a></p>
+<section id="references" class="level1 unnumbered">
+
+
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{ikpa2025,
-  author = {Ikpa, Ochea},
-  title = {Capstone {Project} {Report}},
-  date = {2025-12-11},
-  url = {https://www.example.com},
-  langid = {en}
-}
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-ikpa2025" class="csl-entry quarto-appendix-citeas" role="listitem">
-Ikpa, O. (2025, December 11). <em>Capstone Project Report</em>. My Blog.
-<a href="https://www.example.com">https://www.example.com</a>
-</div></div></section></div></main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-eeaIowAirPollution2025" class="csl-entry" role="listitem">
+EEA. (2025). <span><span class="math inline">\(H\)</span></span>Ow air pollution affects our health. In <em>Europa.eu</em>. https://www.eea.europa.eu/en/topics/in-depth/air-pollution/how-it-affects-our-health.
+</div>
+<div id="ref-nasrGermanyCompliedAir2023" class="csl-entry" role="listitem">
+Nasr, J. (2023). Germany complied with air quality limit values nearly everywhere in 2022 [Text]. In <em>Umweltbundesamt</em>. https://www.umweltbundesamt.de/en/press/pressinformation/germany-complied-air-quality-limit-values-nearly; Umweltbundesamt.
+</div>
+<div id="ref-whoAirQuality2023" class="csl-entry" role="listitem">
+WHO. (2023). Air quality. In <em>Who.int</em>. https://www.who.int/europe/news-room/fact-sheets/item/air-quality.
+</div>
+<div id="ref-whoWHOAmbientAir2024" class="csl-entry" role="listitem">
+WHO. (2024). <em><span>WHO Ambient Air Quality Database</span> (<span>Update Jan</span> 2024)</em>. https://www.who.int/publications/m/item/who-ambient-air-quality-database-(update-jan-2024).
+</div>
+</div></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
