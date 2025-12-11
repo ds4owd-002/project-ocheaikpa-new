@@ -1,0 +1,10 @@
+variable_name,description
+pm2.5,Annual mean concentration of particulate matter with diameter of 2.5_m or less (µg/m_)
+pm10,Annual mean concentration of particulate matter with diameter of 10 _m or less (µg/m_)
+no2,Annual mean concentration of nitrogene dioxide (µg/m_)
+iso3,ISO country code
+region,"WHO region (AF = African region, AM = Region of the Americas, SEA = South-East Asian region, EU = European region, EM = Eastern Mediterranean region, WP = Western Pacific region, NonMS = non-member state)"
+station,"Type as station as provided by the Member states, such as residential, background, etc."
+year,Year of the annual mean concentration
+country,WHO Country Name
+city,Name of the city

@@ -258,10 +258,16 @@ ggplot(corr_air_quality_deu,
 
 # Conclusions
 
-`Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munich, and Stuttgart, indicating improving air quality over the 2010–2021 period. Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least, while strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion. Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies`
+-   `Time-series trends show a clear decline in PM₂.₅, PM₁₀, and NO₂ across Berlin, Hamburg, Munich, and Stuttgart, indicating improving air quality over the 2010–2021 period.`
+
+-   `Descriptive statistics show Stuttgart as the most polluted and Hamburg as the least.`
+
+-   `Strong correlations exist, especially between PM₂.₅ and PM₁₀ which highlights shared emission sources dominated by traffic and combustion.`
+
+-   `Overall, the analyses confirm substantial progress in urban air-quality management driven by stricter emission controls and environmental policies.`
 
 # References
 
 ```{r}
-rm(slopes, compute_slope, percent_change, pca, pca_input, k3, air_quality_alt)
+
 ```
